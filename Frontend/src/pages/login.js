@@ -1,83 +1,70 @@
-import React, { useState } from 'react'
+import React from 'react';
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import useLogin from '../utils/useLogin';
+import { Toaster } from 'react-hot-toast';
+
+// Validation schema
+const schema = yup.object().shape({
+    email: yup.string()
+        .email('Invalid email format')
+        .required('Email is required')
+        .test('contains-at', 'Email must contain "@"', value => value && value.includes('@')),
+    password: yup.string()
+        .min(6, 'Length must be 6')
+        .required('Password is required'),
+});
 
 const Login = () => {
-
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
-
-
-    const createBasicAuthHeader = (username, password) => {
-        const credentials = `${username}:${password}`;
-        const base64Credentials = btoa(credentials); // Encode to Base64
-        return `Basic ${base64Credentials}`;
-    };
-
-
-    const handleLogin = async () => {
-        const userName = "admin";
-        const passWord = "password";
-        const headers = {
-            Authorization: createBasicAuthHeader(userName, passWord),
-            'Content-Type': 'application/json',
-        };
-        setLoading(true);
-        try {
-            const bodyPayload = {
-                "email": email,
-                "password": password
-            };
-            const response = await fetch("http://localhost:5000/api/auth/user-login", {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(bodyPayload)
-            });
-            if (!response.ok) {
-                setLoading(false);
-                throw new Error(`HTTP Error: ${response.status}`);
-            }
-            const data = await response.json();
-            console.log('Protected Data:', data);
-            window.localStorage.setItem("token", data.token);
-            window.location.href="/dashboard"
-        } catch (error) {
-            setLoading(false);
-            setError("An Error occured, please try again");
-        } finally{
-            setLoading(false);
-        }
-    }
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(schema),
+    });
+    const { handleLogin, loading } = useLogin();
 
 
     return (
         <div className="flex flex-col items-center justify-center p-3 bg-slate-200 h-screen">
-            <h1 className="text-2xl font-bold">Login</h1>
-            <div className="flex flex-col items-start justify-center rounded-lg bg-white mt-5 w-[30%] h-[30%]">
-                <div className="flex flex-col w-[80%] mx-auto">
+            <Toaster/>
+            <h1 className="text-2xl font-bold">Signin</h1>
+            <form className="flex flex-col items-center justify-center border-2 border-slate-500 w-[400px] h-fit py-5 mt-10 rounded-xl bg-white" onSubmit={handleSubmit(handleLogin)}>
+                {/* Email */}
+                <div className="flex flex-col items-start justify-center">
                     <label>Email</label>
                     <input
-                        className="border-2 border-slate-600 rounded-md w-[80%]"
-                        onChange={(e) => { setEmail(e.target.value) }}
+                        {...register("email")}
+                        aria-invalid={errors.email ? "true" : "false"}
+                        className="border-2 border-slate-500 rounded-lg"
                     />
+                    {errors.email && (
+                        <p className="text-red-600" role="alert">{errors.email.message}</p>
+                    )}
                 </div>
 
-                <div className="flex flex-col w-[80%] mx-auto">
+                {/* Password */}
+                <div className="flex flex-col items-start justify-center">
                     <label>Password</label>
                     <input
-                        className="border-2 border-slate-600 rounded-md w-[80%]"
-                        onChange={(e) => { setPassword(e.target.value) }}
+                        type="password"
+                        {...register("password")}
+                        aria-invalid={errors.password ? "true" : "false"}
+                        className="border-2 border-slate-500 rounded-lg"
                     />
+                    {errors.password && (
+                        <p className="text-red-600" role="alert">{errors.password.message}</p>
+                    )}
                 </div>
-                <button className="text-white bg-blue-800 px-16 rounded-xl py-2 mx-auto mt-5" onClick={handleLogin}>
-                    {loading?"Loading":"Login"}
+
+                {/* Submit Button */}
+                <button type="submit" className="text-white bg-blue-800 hover:bg-blue-900 px-16 rounded-xl py-2 mx-auto mt-5">
+                    {loading ? "Loading..." : "Signin"}
                 </button>
-                <a href="/signup" className="text-blue-500 text-center mx-auto">
-                    <p>Don't have account? Signup</p>
-                </a>
-            </div>
+            </form>
+            <a href="/signup" className="text-blue-500 text-center mx-auto hover">
+                <p>Don't have an account? Signup</p>
+            </a>
         </div>
     );
 }
 
-export default Login
+export default Login;

@@ -1,27 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { AppContext } from '../context/appContext';
+import useRouter from '../hooks/useRouter';
 
 const Dashboard = () => {
   const [data, setData] = useState(null);
-
+  const {token, setToken} = useContext(AppContext);
+  const {navigate} = useRouter();
   
-  const decodeToken = () => {
-    const token = window.localStorage.getItem("token");
+
+  const decodeToken = (token) => {
     if (token) {
       const payload = token.split('.')[1]; 
       const decodedPayload = JSON.parse(atob(payload)); 
-      return decodedPayload;     }
+      return decodedPayload; 
+    }
     return null;
   };
 
   const logout = ()=>{
-    window.localStorage.setItem("token","");
-    window.location.href = "/login";
+    setToken("");
+    navigate("/login")
   }
 
   useEffect(() => {
-    const userData = decodeToken(); 
+    const userData = decodeToken(token); 
     setData(userData); 
-  }, []);
+  }, [token]);
+
+
 
   if (data) {
     return (

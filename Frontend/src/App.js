@@ -4,10 +4,13 @@ import Dashboard from './pages/dashboard.js';
 import Signup from './pages/signup.js';
 import Login from './pages/login.js';
 import Home from './pages/home.js';
-import React from 'react'
+import React, { useState } from 'react'
+import { AppContext } from "./context/appContext.js";
 
 const App = () => {
+  const [token, setToken] = useState("");
   return (
+    <AppContext.Provider value={{token, setToken}}>
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -20,9 +23,10 @@ const App = () => {
               <Dashboard />
             </AuthProvider>
           }
-        />
+          />
       </Routes>
     </Router>
+  </AppContext.Provider>
   );
 }
 

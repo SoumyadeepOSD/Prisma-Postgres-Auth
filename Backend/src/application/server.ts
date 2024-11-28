@@ -1,18 +1,14 @@
 import { type Request, type ResponseToolkit, Server } from '@hapi/hapi'
-import Inert from '@hapi/inert'
-import Vision from '@hapi/vision'
-import HapiSwagger from 'hapi-swagger'
-import hapiAuthJwt2 from 'hapi-auth-jwt2'
-import basicAuth from 'basic-auth'
-
-import environment from '../config/environment'
-
-import validate from '../middlewares/validate-user'
-
-import routes from '../routes';
-import logger from '../config/logger'
-
 import type IUser from '../interfaces/models/IUser'
+import validate from '../middlewares/validate-user'
+import environment from '../config/environment'
+import hapiAuthJwt2 from 'hapi-auth-jwt2'
+import HapiSwagger from 'hapi-swagger'
+import logger from '../config/logger'
+import basicAuth from 'basic-auth'
+import Vision from '@hapi/vision'
+import Inert from '@hapi/inert'
+import routes from '../routes';
 
 declare module '@hapi/hapi' {
   export interface Request {
@@ -42,7 +38,6 @@ export default async () => {
   const swaggerOptions = {
     info: {
       title: 'Codelogicx HAPI Backend Template',
-      // "1.0"
     },
     grouping: 'tags',
     basePath: '/api/',
