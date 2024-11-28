@@ -22,6 +22,10 @@ const Dashboard = () => {
     navigate("/login")
   }
 
+  const handleBack = ()=>{
+    navigate(-1);
+  }
+
   useEffect(() => {
     const userData = decodeToken(token); 
     setData(userData); 
@@ -37,6 +41,9 @@ const Dashboard = () => {
         <p>You are authenticated!</p>
         <button className="text-white bg-blue-800 px-16 rounded-xl py-2 mx-10 mt-5" onClick={logout}>
             Logout
+        </button>
+        <button className="text-white bg-blue-800 px-16 rounded-xl py-2 mx-10 mt-5" onClick={handleBack}>
+            Back
         </button>
       </div>
     );

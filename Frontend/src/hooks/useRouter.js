@@ -2,12 +2,8 @@
 import { useNavigate } from "react-router-dom";
 
 const useRouter = () => {
-    const navigate = useNavigate();
-    const goTo = (path) => {
-        navigate(path);
-    };
-
-    return { navigate: goTo};
+    const navigate = useNavigate()
+    return { navigate };
 };
 
 export default useRouter;
