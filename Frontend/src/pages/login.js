@@ -54,7 +54,7 @@ const Login = () => {
         <div className="flex flex-col items-center justify-center p-3 bg-slate-200 h-screen">
             <h1 className="text-2xl font-bold">Login</h1>
             <div className="flex flex-col items-start justify-center rounded-lg bg-white mt-5 w-[30%] h-[30%]">
-                <div className="flex flex-col w-[80%] mx-10">
+                <div className="flex flex-col w-[80%] mx-auto">
                     <label>Email</label>
                     <input
                         className="border-2 border-slate-600 rounded-md w-[80%]"
@@ -62,7 +62,7 @@ const Login = () => {
                     />
                 </div>
 
-                <div className="flex flex-col w-[80%] mx-10">
+                <div className="flex flex-col w-[80%] mx-auto">
                     <label>Password</label>
                     <input
                         className="border-2 border-slate-600 rounded-md w-[80%]"
