@@ -1,5 +1,3 @@
-import { type Request } from '@hapi/hapi'
-
 import { getUserFromDB } from '../repository/user'
 
 import type IUser from '../interfaces/models/IUser';

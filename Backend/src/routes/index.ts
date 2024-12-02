@@ -6,9 +6,11 @@ import type ITaggedRoute from '../interfaces/api/tagged-route'
 
 import auth from './auth'
 import user from './user'
+import tag from "./tag"
 const routes: ITaggedRoute[] = [
   ...auth,
   ...user,
+  ...tag,
 ]
 
 export default {

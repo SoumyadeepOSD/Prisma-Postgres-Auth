@@ -17,7 +17,7 @@ const useSignup = () => {
                 email: data.email,
                 password: data.password,
             };
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/user-register`, bodyPayload, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/user-register`, bodyPayload, {
                 headers: { "Content-Type": "application/json" },
             });
             if (response.status !== 200) {

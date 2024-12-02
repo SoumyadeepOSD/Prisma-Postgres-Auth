@@ -7,30 +7,30 @@ import toast from 'react-hot-toast';
 
 const notify = (str) => toast(str);
 
-const useLogin = () => {
+const useSubmit = () => {
     const [loading, setLoading] = useState(false);
     const { navigate } = useRouter();
-    const {setToken, token} = useContext(AppContext);
+    const {userInfo} = useContext(AppContext);
     
 
-    const handleLogin = async (data) => {
+
+    const handleSubmitData = async (data) => {
         setLoading(true);
         try {
             const bodyPayload = {
-                email: data.email,
-                password: data.password
+                tag: data.tag,
+                values:data.values.split(","),
+                user_id: userInfo.id
             };
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/user-login`, bodyPayload, {
+            const response = await axios.post("http://localhost:5000/api/tag/tag-submit", bodyPayload, {
                 headers: { "Content-Type": "application/json" },
             });
             if (response.status !== 200) {
                 throw new Error(`HTTP Error: ${response.status}`);
             }
             console.log('Protected Data:', response.data);
-            notify("Successfully Logged in🥳");
-            setToken(response.data?.token);
-            console.log(token);
-            navigate("/dashboard");
+            notify("Successfully registered tags");
+            navigate("/dashboard/tag-view");
         } catch (error) {
             notify(error.message);
             console.error(error);
@@ -39,7 +39,7 @@ const useLogin = () => {
         }
     };
 
-    return { handleLogin, loading };
+    return { handleSubmitData, loading };
 };
 
-export default useLogin;
+export default useSubmit;

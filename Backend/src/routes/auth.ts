@@ -29,7 +29,7 @@ const routes: IRoute[] = [
     description: 'User Registration',
     handler: userRegister,
     validation: registerValidation
-  }
+  },
 ]
 
 export default createRoute({

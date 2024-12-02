@@ -1,10 +1,10 @@
 import createRoute from '../wrappers/route'
 import type IRoute from '../interfaces/api/route'
 import { httpMethod } from '../config/constants'
-import { tagRegisterValidation } from '../validations/tag'
-import { sendData } from '../controllers/tags'
+import { tagRegisterValidation, tagViewValidation } from '../validations/tag'
+import { getData, sendData } from '../controllers/tags'
 
-const tags = ['api', 'Authentication', 'data']
+const tags = ['api', 'Tag']
 
 const routes: IRoute[] = [
   {
@@ -13,7 +13,14 @@ const routes: IRoute[] = [
     description: 'Tag Register',
     handler: sendData,
     validation: tagRegisterValidation
-  }
+  },
+  {
+    path: '/tag-view',
+    method: httpMethod.POST,
+    description: 'Tag View',
+    handler: getData,
+    validation: tagViewValidation
+  },
 ]
 
 export default createRoute({

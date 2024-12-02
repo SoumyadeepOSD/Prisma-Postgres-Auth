@@ -22,9 +22,11 @@ export const updateTagToDB = async ({
 
 export const getTagFromDB = async({
     where,
-    select
+    select,
+    multi = false
 }:{
     where: any
     select: any
-})=> await Tag.findFirst({where, select});
+    multi?: boolean
+})=> multi ? await Tag.findMany({where, select}) : await Tag.findFirst({where, select});
 
