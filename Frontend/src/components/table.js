@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SquarePen, Trash2Icon, CheckCircle2 } from "lucide-react";
+import { SquarePen, Trash2Icon, CheckCircle2, CircleX } from "lucide-react";
 import { useState } from "react";
 
 const TableComponent = ({ tags }) => {
@@ -9,12 +9,17 @@ const TableComponent = ({ tags }) => {
 
     const editTag = async ({ id, tag, values }) => {
         try {
-            const bodyPayload = { id, tag, values };
-            const response = await axios.put(
-                "http://localhost:5000/api/tag/tag-edit",
+            const bodyPayload = { tag, values };
+            const response = await axios.patch(
+                `http://localhost:5000/api/tag/tag-edit/${id}`,
                 bodyPayload,
-                { headers: { "Content-Type": "application/json","Access-Control-Allow-Origin": "*", } }
+                { 
+                    headers: { 
+                        "Content-Type": "application/json",
+                    }
+                }
             );
+            console.log(response);
             if (response.status !== 200) {
                 throw new Error(`HTTP Error: ${response.status}`);
             }
@@ -96,14 +101,17 @@ const TableComponent = ({ tags }) => {
                                 </td>
                                 <td className="px-6 py-4">
                                     {isRowEditable ? (
+                                        <div className="flex flex-row items-center gap-3 justify-center">
                                         <CheckCircle2
                                             color="green"
                                             onClick={() => {
                                                 editTag({ id: item.id, tag: updatedTag, values: updatedValues });
                                                 setEditableIndex(null); // Disable editing after submitting
                                             }}
-                                            className="hover:cursor-pointer"
+                                            className="hover:cursor-pointer hover:bg-green-300 rounded-full"
                                         />
+                                        <CircleX color="red" onClick={()=>{setEditableIndex(null)}} className="hover:cursor-pointer hover:bg-red-200 rounded-full"/>
+                                        </div>
                                     ) : (
                                         <SquarePen
                                             color="white"

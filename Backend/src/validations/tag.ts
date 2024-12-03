@@ -17,14 +17,16 @@ export const tagViewValidation = {
 
 export const tagEditValidation = {
   payload: Joi.object({
-    id: Joi.number().required(),
     tag: Joi.string().required(),
     values: Joi.array().items(Joi.string()).required(),
-  })
-}
+  }),
+  params: Joi.object({
+    id: Joi.number().required(), // Ensure id is validated only in params
+  }),
+};
 
 export const tagDeleteValidation = {
-  payload: Joi.object({
+  params: Joi.object({
     id: Joi.number().required(),
   })
 }

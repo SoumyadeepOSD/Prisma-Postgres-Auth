@@ -31,7 +31,6 @@ const useSubmit = () => {
             }
             console.log('Protected Data:', response.data);
             notify("Successfully registered tags");
-            navigate("/dashboard/tag-view");
         } catch (error) {
             notify(error.message);
             console.error(error);

@@ -22,14 +22,14 @@ const routes: IRoute[] = [
     validation: tagViewValidation
   },
   {
-    path: '/tag-edit',
-    method: httpMethod.PUT,
+    path: '/tag-edit/{id}',
+    method: httpMethod.PATCH,
     description: 'Tag Edit',
     handler: editData,
     validation: tagEditValidation
   },
   {
-    path: '/tag-delete/:id',
+    path: "/tag-delete/{id}",
     method: httpMethod.DELETE,
     description: 'Tag Delete',
     handler: deleteData,

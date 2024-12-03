@@ -81,35 +81,22 @@ export const getData = async (req: any) => {
 // ==========================================================
 export const editData = async (req: Request) => {
   const tagEditPayload = req.payload as {
-    id: number;
     tag: string;
     values: string[];
   };
-
-  const existingTag = await getTagFromDB({
-    where: {
-      id: tagEditPayload.id
-    },
-    select:{
-      tag: true
-    }
-  });
-
-  if(!existingTag){
-    throw new BadRequestError('Tag does not exist.');
-  }
-
+  const tagEditParams = req.params as {
+    id: number;
+  };
   // Append new values to the existing array
   const updatedTag = await updateTagToDB({
     where: {
-      id: tagEditPayload.id,
+      id: tagEditParams.id,
     },
     data: {
+      tag: tagEditPayload.tag,
       values: tagEditPayload.values,
-      tag: tagEditPayload.tag
     }
   });
-
   return { message: 'Tag updated successfully', tag: updatedTag };
 };
 

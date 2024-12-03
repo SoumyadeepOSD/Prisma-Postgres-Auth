@@ -7,6 +7,7 @@ import { useContext, useEffect } from "react";
 import { AppContext } from "../context/appContext";
 import axios from "axios";
 import TableComponent from "../components/table";
+import { RefreshCcw, Plus } from "lucide-react";
 
 const schema = yup.object().shape({
     tag: yup.string()
@@ -149,21 +150,25 @@ const CreatePage = () => {
             </div>
             {/* </div> */}
             <div className="text-black">
-                {!isOpen && <button
-                    className="text-white bg-black px-5 py-2 rounded-2xl hover:bg-slate-700 hover:text-slate-300"
+                {!isOpen && <div className="flex flex-row items-center justify-start gap-3">
+                <button
+                    className="text-white bg-black px-5 py-2 rounded-2xl hover:bg-slate-700 hover:text-slate-300 flex flex-row items-center justify-center gap-3"
                     onClick={handleToogle}
                 >
-                    Toogle
-                </button>}
+                    Create
+                    <Plus color="white"/>
+                </button>
+                <button
+                    className="text-white bg-black px-5 py-2 rounded-2xl hover:bg-slate-700 hover:text-slate-300 flex flex-row items-center justify-center"
+                    onClick={getTagData}
+                >
+                    Refresh
+                    <RefreshCcw color="white" className="hover:animate-spin text-white"/>
+                </button>
+                </div>}
                 <div className={`${isOpen ? "blur-md" : "blur-none"}`}>
                 <TableComponent tags={tags}/>
                 </div>
-                {/* {tags.map((item, index) => (
-                    <div key={index} className={`p-2 border-b border-gray-300 ${isOpen ? "blur-md" : "blur-none"}`}>
-                        <div className="font-bold">{item.tag}</div>
-                        <div>{item.values.join(", ")}</div>
-                    </div>
-                ))} */}
             </div>
             
         </div>
