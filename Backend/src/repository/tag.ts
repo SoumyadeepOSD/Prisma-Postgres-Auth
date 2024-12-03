@@ -13,12 +13,10 @@ export const createNewTagToDB = async({
 export const updateTagToDB = async ({
     data,
     where,
-    many = false
   }: {
     data: any
     where: any
-    many?: boolean
-  }) => many ? await Tag.updateMany({ data, where }) : await Tag.update({ data, where })
+  }) =>  await Tag.update({ where, data })
 
 export const getTagFromDB = async({
     where,
@@ -30,3 +28,12 @@ export const getTagFromDB = async({
     multi?: boolean
 })=> multi ? await Tag.findMany({where, select}) : await Tag.findFirst({where, select});
 
+
+
+export const deleteTagFromDB = async({
+    where,
+    multi = false
+}:{
+    where: any
+    multi?: boolean
+})=> multi ? await Tag.deleteMany({where}) : await Tag.delete({where});

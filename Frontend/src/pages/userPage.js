@@ -30,9 +30,9 @@ const UserPage = () => {
 
     useEffect(() => {
         getTagData();
-    }, []); // Runs only once when the component mounts
-
-    // Handling loading state and error messages
+    }, []); 
+  
+    
     if (loading) {
         return (
             <div className="bg-black flex flex-col items-center justify-center h-screen">

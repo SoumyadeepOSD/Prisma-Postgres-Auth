@@ -19,17 +19,29 @@ model User {
   password    String   @db.VarChar(200)
   is_verified Boolean? @default(false)
   created_at  DateTime @default(now())
-  tags Tag[] //one to many relationship
+  tags        Tag[] //one to many relationship
 
   @@map("users")
 }
 
 model Tag {
-  id     Int      @id @default(autoincrement())
-  tag    String   @unique
-  values Json     @default("[]") // Use Json type to store an array of strings
-  user_id Int //foreign key
-  user User @relation(fields: [user_id], references: [id])
+  id         Int    @id @default(autoincrement())
+  tag        String @unique
+  values     Json   @default("[]") // Use Json type to store an array of strings
+  field_type String @default("text")
+  user_id    Int //foreign key
+  user       User   @relation(fields: [user_id], references: [id])
 
   @@map("tag")
 }
+
+
+
+// {
+//   "tag": "Gender",
+//   "values": [
+//     "Male", "Female"
+//   ],
+//   "user_id": 1,
+//   "field_type": "dropdown"
+// }
