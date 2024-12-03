@@ -6,6 +6,7 @@ import * as yup from "yup";
 import { useContext, useEffect } from "react";
 import { AppContext } from "../context/appContext";
 import axios from "axios";
+import TableComponent from "../components/table";
 
 const schema = yup.object().shape({
     tag: yup.string()
@@ -23,6 +24,8 @@ const CreatePage = () => {
     const [error, setError] = useState(null);
     const [tags, setTags] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
+
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
     });
@@ -39,7 +42,9 @@ const CreatePage = () => {
         };
         try {
             const response = await axios.post("http://localhost:5000/api/tag/tag-view", bodyPayload, {
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json" 
+                },
             });
             if (response.status === 200) {
                 setTags(response.data.tag); // Set the 'tag' array directly
@@ -53,15 +58,17 @@ const CreatePage = () => {
         }
     };
 
+    const handleToogle = () => {
+        setIsOpen((isOpen) => !isOpen);
+    }
+
     useEffect(() => {
         getTagData();
     }, []);
 
     return (
-        <div className="flex flex-row items-center justify-center w-full h-screen">
-            <div className="flex flex-col items-center justify-center">
-                <h1 className="text-[60px] font-bold text-transparent bg-gradient-to-br from-blue-600 to-purple-600 bg-clip-text">Create Form</h1>
-                {/* <div className=" bg-gradient-to-br from-slate-800 to-slate-300 rounded-xl w-[30%] h-[50%]"> */}
+        <div className={`flex flex-row items-center justify-center w-full h-screen relative ${isOpen ? "bg-slate-800 z-0" : ""}`}>
+            <div className={`${isOpen ? "flex z-20" : "hidden"} flex-col items-center justify-center absolute`}>
                 <form
                     className="flex flex-col items-center justify-center border-2 border-slate-500 w-[400px] h-[60%] py-5 mt-10 rounded-xl bg-white"
                     onSubmit={handleSubmit(handleSubmitData)}
@@ -117,12 +124,19 @@ const CreatePage = () => {
                             )}
                         </div>
                     )}
-                    <div className="flex flex-col items-center w-[400px] mt-5">
+                    <div className="flex flex-row items-center justify-evenly w-[400px] mt-5">
+
                         <button
-                            className="text-white bg-blue-800 hover:bg-blue-900 px-16 rounded-xl py-2 mx-auto mt-5"
+                            className="text-white bg-black px-5 py-2 rounded-2xl hover:bg-slate-700 hover:text-slate-300"
                             onClick={handleSubmit}
                         >
-                            Send Data
+                            Submit
+                        </button>
+                        <button
+                            className="text-white bg-red-500 px-5 py-2 rounded-2xl hover:bg-red-700 hover:text-slate-300"
+                            onClick={handleToogle}
+                        >
+                            Cancel
                         </button>
                     </div>
                     {
@@ -135,13 +149,23 @@ const CreatePage = () => {
             </div>
             {/* </div> */}
             <div className="text-black">
-                {tags.map((item, index) => (
-                    <div key={index} className="p-2 border-b border-gray-300">
+                {!isOpen && <button
+                    className="text-white bg-black px-5 py-2 rounded-2xl hover:bg-slate-700 hover:text-slate-300"
+                    onClick={handleToogle}
+                >
+                    Toogle
+                </button>}
+                <div className={`${isOpen ? "blur-md" : "blur-none"}`}>
+                <TableComponent tags={tags}/>
+                </div>
+                {/* {tags.map((item, index) => (
+                    <div key={index} className={`p-2 border-b border-gray-300 ${isOpen ? "blur-md" : "blur-none"}`}>
                         <div className="font-bold">{item.tag}</div>
                         <div>{item.values.join(", ")}</div>
                     </div>
-                ))}
+                ))} */}
             </div>
+            
         </div>
     );
 };

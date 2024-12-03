@@ -29,7 +29,7 @@ const routes: IRoute[] = [
     validation: tagEditValidation
   },
   {
-    path: '/tag-delete',
+    path: '/tag-delete/:id',
     method: httpMethod.DELETE,
     description: 'Tag Delete',
     handler: deleteData,

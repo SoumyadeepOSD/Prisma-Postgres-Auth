@@ -20,7 +20,8 @@ const useSubmit = () => {
             const bodyPayload = {
                 tag: data.tag,
                 values:data.values.split(","),
-                user_id: userInfo.id
+                user_id: userInfo.id,
+                field_type:data.values.length>=0 ? "dropdown":"text"
             };
             const response = await axios.post("http://localhost:5000/api/tag/tag-submit", bodyPayload, {
                 headers: { "Content-Type": "application/json" },

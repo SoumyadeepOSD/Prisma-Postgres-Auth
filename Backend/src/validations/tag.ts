@@ -17,7 +17,7 @@ export const tagViewValidation = {
 
 export const tagEditValidation = {
   payload: Joi.object({
-    user_id: Joi.number().required(),
+    id: Joi.number().required(),
     tag: Joi.string().required(),
     values: Joi.array().items(Joi.string()).required(),
   })
@@ -25,8 +25,6 @@ export const tagEditValidation = {
 
 export const tagDeleteValidation = {
   payload: Joi.object({
-    user_id: Joi.number().required(),
-    tag: Joi.string().required(),
-    values: Joi.array().items(Joi.string()).required(),
+    id: Joi.number().required(),
   })
 }

@@ -21,7 +21,9 @@ export default async () => {
     port: +environment.PORT || 8080,
     host: environment.HOST || '127.0.0.1',
     routes: {
-      cors: true
+      cors: {
+        origin: ['*'],
+      }
     }
   })
 

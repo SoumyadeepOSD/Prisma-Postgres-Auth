@@ -59,10 +59,11 @@ export const getData = async (req: any) => {
   };
   const tagDetailsPromise = getTagFromDB({
     where: {
-      id: tagViewPayload.user_id,
-      tag: tagViewPayload.tag
+      user_id: tagViewPayload.user_id,
+      // tag: tagViewPayload.tag
     },
     select: {
+      id:true,
       user_id: true,
       tag: true,
       values: true,
@@ -80,14 +81,14 @@ export const getData = async (req: any) => {
 // ==========================================================
 export const editData = async (req: Request) => {
   const tagEditPayload = req.payload as {
-    user_id: number;
+    id: number;
     tag: string;
     values: string[];
   };
 
   const existingTag = await getTagFromDB({
     where: {
-      user_id: tagEditPayload.user_id
+      id: tagEditPayload.id
     },
     select:{
       tag: true
@@ -101,7 +102,7 @@ export const editData = async (req: Request) => {
   // Append new values to the existing array
   const updatedTag = await updateTagToDB({
     where: {
-      user_id: tagEditPayload.user_id,
+      id: tagEditPayload.id,
     },
     data: {
       values: tagEditPayload.values,
@@ -117,15 +118,12 @@ export const editData = async (req: Request) => {
 // &Delete the particular tag(attribute) from the table
 // ==========================================================
 export const deleteData = async (req: Request) => {
-  const tagViewPayload = req.payload as {
-    user_id: number;
-    tag: string;
-    valueName: string;
+  const tagViewPayload = req.params as {
+    id: number;
   };
   const tagDetailsPromise = deleteTagFromDB({
     where: {
-      user_id: tagViewPayload.user_id,
-      tag: tagViewPayload.tag,
+      id: tagViewPayload.id,
     },
   }) as ITag
   const [tagDetails] = await Promise.all([tagDetailsPromise])
