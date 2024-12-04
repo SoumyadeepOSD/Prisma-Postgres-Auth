@@ -34,8 +34,8 @@ const HeaderComponent = () => {
                         </Link>
                     </li>
                     <li>
-                        <Link to="/dashboard/about" className="hover:cursor-pointer hover:text-blue-700">
-                            About
+                        <Link to="/dashboard/select" className="hover:cursor-pointer hover:text-blue-700">
+                            Select
                         </Link>
                     </li>
                     <li>

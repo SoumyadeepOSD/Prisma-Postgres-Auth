@@ -23,7 +23,7 @@ export const sendData = async (req: Request) => {
   // Case-insensitive check
   const tagExists = await getTagFromDB({
     where: {
-      tag: tagRegisterPayload.tag.toLowerCase(), // Convert tag to lowercase for comparison
+      tag: tagRegisterPayload.tag, // Convert tag to lowercase for comparison
     },
     select: {
       tag: true,
@@ -42,6 +42,7 @@ export const sendData = async (req: Request) => {
       field_type: tagRegisterPayload.field_type,
       user_id: tagRegisterPayload.user_id,
     },
+    many: true,
   }) as ITag;
 
   logger.info(tagCreated);

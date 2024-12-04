@@ -5,8 +5,9 @@ import { Routes, Route, Outlet } from "react-router-dom";
 import Dashboard from "./dashboard";
 import CreatePage from "./create";
 import UserPage from "./userPage";
+import SelectPage from "./select";
 
-const About = () => <div className="text-black">About Page</div>;
+// const About = () => <div className="text-black">About Page</div>;
 const Contact = () => <div className="text-black">Contact Page</div>;
 
 const DashboardLayout = () => {
@@ -46,7 +47,7 @@ const DashboardLayout = () => {
             <Routes>
                 <Route index element={<Dashboard userInfo={userInfo} />} />
                 <Route path="create" element={<CreatePage />} />
-                <Route path="about" element={<About />} />
+                <Route path="select" element={<SelectPage />} />
                 <Route path="contact" element={<Contact />} />
                 <Route path="tag-view" element={<UserPage />} />
             </Routes>

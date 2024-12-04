@@ -1,11 +1,17 @@
 import axios from "axios";
 import { SquarePen, Trash2Icon, CheckCircle2, CircleX } from "lucide-react";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AppContext } from "../context/appContext";
 
-const TableComponent = ({ tags }) => {
-    const [editableIndex, setEditableIndex] = useState(null);  // Track the index of the editable row
-    const [updatedTag, setUpdatedTag] = useState("");  // State to store the updated tag
-    const [updatedValues, setUpdatedValues] = useState([]);  // State to store the updated values
+const TableComponent = ({fetchData}) => {
+    const [editableIndex, setEditableIndex] = useState(null); // Track the index of the editable row
+    const [updatedTag, setUpdatedTag] = useState(""); // State to store the updated tag
+    const [updatedValues, setUpdatedValues] = useState([]); // State to store the updated values
+    const {userInfo, tags, setTags} = useContext(AppContext);
+
+    useEffect(() => {
+        fetchData();
+    }, [tags.length]);
 
     const editTag = async ({ id, tag, values }) => {
         try {
@@ -13,38 +19,41 @@ const TableComponent = ({ tags }) => {
             const response = await axios.patch(
                 `http://localhost:5000/api/tag/tag-edit/${id}`,
                 bodyPayload,
-                { 
-                    headers: { 
+                {
+                    headers: {
                         "Content-Type": "application/json",
-                    }
+                    },
                 }
             );
-            console.log(response);
             if (response.status !== 200) {
                 throw new Error(`HTTP Error: ${response.status}`);
             }
-            console.log("Protected Data:", response.data);
+            console.log("Updated Data:", response.data);
+            fetchData(); // Refresh the tags data
         } catch (error) {
             console.error(error);
         }
     };
 
-    const deleteTag = async({ id }) => {
+    const deleteTag = async ({ id }) => {
         try {
-            // const bodyPayload = { id };
             const response = await axios.delete(
                 `http://localhost:5000/api/tag/tag-delete/${id}`,
-                // bodyPayload,
                 { headers: { "Content-Type": "application/json" } }
             );
             if (response.status !== 200) {
                 throw new Error(`HTTP Error: ${response.status}`);
             }
-            console.log("Protected Data:", response.data);
+            console.log("Deleted Data:", response.data);
+            fetchData(); // Refresh the tags data
         } catch (error) {
             console.error(error);
         }
     };
+
+    if (!tags || tags.length === 0) {
+        return <div>No tags available to display.</div>;
+    }
 
     return (
         <div className="relative overflow-x-auto my-5">
@@ -102,15 +111,21 @@ const TableComponent = ({ tags }) => {
                                 <td className="px-6 py-4">
                                     {isRowEditable ? (
                                         <div className="flex flex-row items-center gap-3 justify-center">
-                                        <CheckCircle2
-                                            color="green"
-                                            onClick={() => {
-                                                editTag({ id: item.id, tag: updatedTag, values: updatedValues });
-                                                setEditableIndex(null); // Disable editing after submitting
-                                            }}
-                                            className="hover:cursor-pointer hover:bg-green-300 rounded-full"
-                                        />
-                                        <CircleX color="red" onClick={()=>{setEditableIndex(null)}} className="hover:cursor-pointer hover:bg-red-200 rounded-full"/>
+                                            <CheckCircle2
+                                                color="green"
+                                                onClick={() => {
+                                                    editTag({ id: item.id, tag: updatedTag, values: updatedValues });
+                                                    setEditableIndex(null); // Disable editing after submitting
+                                                }}
+                                                className="hover:cursor-pointer hover:bg-green-300 rounded-full"
+                                            />
+                                            <CircleX
+                                                color="red"
+                                                onClick={() => {
+                                                    setEditableIndex(null);
+                                                }}
+                                                className="hover:cursor-pointer hover:bg-red-200 rounded-full"
+                                            />
                                         </div>
                                     ) : (
                                         <SquarePen
@@ -125,9 +140,9 @@ const TableComponent = ({ tags }) => {
                                     )}
                                 </td>
                                 <td className="px-6 py-4">
-                                    <Trash2Icon 
-                                        color="red" 
-                                        onClick={() => deleteTag({ id: item.id })} 
+                                    <Trash2Icon
+                                        color="red"
+                                        onClick={() => deleteTag({ id: item.id })}
                                         className="hover:cursor-pointer"
                                     />
                                 </td>

@@ -1,19 +1,21 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import TableComponent from "../components/table";
+import { Plus } from "lucide-react";
+import getTagData from "../utils/fetchData.js";
 import useSubmit from "../utils/useSubmit";
 import { useForm } from "react-hook-form";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import * as yup from "yup";
-import { useContext, useEffect } from "react";
-import { AppContext } from "../context/appContext";
-import axios from "axios";
-import TableComponent from "../components/table";
-import { RefreshCcw, Plus } from "lucide-react";
+import { AppContext } from "../context/appContext.js";
+
 
 const schema = yup.object().shape({
     tag: yup.string()
         .required('Tag name is required'),
-    values: yup.string()
-        .required('Values are required'),
+    values: yup.array()
+        .of(yup.string()) 
+        .required('Values are required')
+        .default([]),
 });
 
 
@@ -21,11 +23,8 @@ const CreatePage = () => {
     const [name, setName] = useState("");
     const [valueType, setValueType] = useState("text");
     const [textValue, setTextValue] = useState("");
-    const { userInfo } = useContext(AppContext);
-    const [error, setError] = useState(null);
-    const [tags, setTags] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
+    const {userInfo, setTags} = useContext(AppContext);
 
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
@@ -35,37 +34,19 @@ const CreatePage = () => {
         setValueType(valueType === "text" ? "dropdown" : "text");
     };
 
-    const { handleSubmitData } = useSubmit();
-
-    const getTagData = async () => {
-        const bodyPayload = {
-            user_id: userInfo?.id,
-        };
-        try {
-            const response = await axios.post("http://localhost:5000/api/tag/tag-view", bodyPayload, {
-                headers: { 
-                    "Content-Type": "application/json" 
-                },
-            });
-            if (response.status === 200) {
-                setTags(response.data.tag); // Set the 'tag' array directly
-            } else {
-                setError(`HTTP Error: ${response.status}`);
-            }
-        } catch (error) {
-            setError(`Error: ${error.message}`);
-        } finally {
-            setLoading(false);
-        }
-    };
-
+    
     const handleToogle = () => {
         setIsOpen((isOpen) => !isOpen);
     }
+    
+    const fetchData = async () => {
+        if (userInfo) {
+            const tags = await getTagData({ id: userInfo?.id });
+            setTags(tags);
+        }
+    };
 
-    useEffect(() => {
-        getTagData();
-    }, []);
+    const { handleSubmitData } = useSubmit(fetchData, handleToogle);
 
     return (
         <div className={`flex flex-row items-center justify-center w-full h-screen relative ${isOpen ? "bg-slate-800 z-0" : ""}`}>
@@ -158,16 +139,9 @@ const CreatePage = () => {
                     Create
                     <Plus color="white"/>
                 </button>
-                <button
-                    className="text-white bg-black px-5 py-2 rounded-2xl hover:bg-slate-700 hover:text-slate-300 flex flex-row items-center justify-center"
-                    onClick={getTagData}
-                >
-                    Refresh
-                    <RefreshCcw color="white" className="hover:animate-spin text-white"/>
-                </button>
                 </div>}
                 <div className={`${isOpen ? "blur-md" : "blur-none"}`}>
-                <TableComponent tags={tags}/>
+                <TableComponent fetchData={fetchData}/>
                 </div>
             </div>
             
