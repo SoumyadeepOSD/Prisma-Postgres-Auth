@@ -68,3 +68,21 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+
+<!-- const handleSelectTag = (index, value, propName) => {
+  // const updatedPairs = [...addedPairs];  
+  // updatedPairs[index] = { ...updatedPairs[index], tag };
+  // console.log("==========added pairs==============");
+  // console.log(updatedPairs[index]); 
+  // setAddedPairs(updatedPairs);  
+  setAddedPairs((spans) => {
+    const parsedData = JSON.parse(value)
+    spans[index][propName] = {
+      id: parsedData.id,
+      tagName: parsedData.tag
+    }
+    return [...spans]
+} )
+}; -->

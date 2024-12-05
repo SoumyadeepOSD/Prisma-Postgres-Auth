@@ -1,40 +1,46 @@
+import { AppContext } from "../context/appContext";
 import React, { useContext, useState } from "react";
 import { XCircle, Plus } from "lucide-react";
-import { AppContext } from "../context/appContext";
 
 const SelectPage = () => {
   const [isOpenSidBar, setIsOpenSideBar] = useState(false);
   const { tags } = useContext(AppContext);
+  const temp = {
+    tag: null,
+    values: [""],
+  }
+  const [addedPairs, setAddedPairs] = useState([{...temp}]);
 
-  const [addedPairs, setAddedPairs] = useState([]);
-
-  const toogleSidebar = () => setIsOpenSideBar((isOpenSidBar) => !isOpenSidBar);
+  const toggleSidebar = () => setIsOpenSideBar((prev) => !prev);
 
   const handleAddPair = () => {
     setAddedPairs((prev) => [
       ...prev,
-      {
-        id: prev.length,
-        tag: "", 
-        values: [""], 
-      },
+      {...temp}
     ]);
   };
 
-  const handleSelectTag = (id, tag) => {
-    setAddedPairs((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, tag } : item // Update only the selected pair's tag
-      )
-    );
-  };
+  const handleSelectTag = (index, value, propName) => {
+    console.log(value)
+  setAddedPairs((spans) => {
+    const parsedData = JSON.parse(value)
+    spans[index][propName] = {
+      id: parsedData.id,
+      tagName: parsedData.tagName
+    }
+    return [...spans]
+} )
+};
+
+  console.log("==============Added Pairs================");
+  console.log(addedPairs);
 
   return (
     <div className="text-black mt-5 w-full h-full bg-slate-300 flex flex-col items-center justify-start relative">
       <h1 className={`${isOpenSidBar ? "blur-md" : "blur-none"}`}>SelectPage</h1>
       <button
         className={`bg-blue-400 ${isOpenSidBar ? "blur-md" : "blur-none"}`}
-        onClick={toogleSidebar}
+        onClick={toggleSidebar}
       >
         Create
       </button>
@@ -46,39 +52,35 @@ const SelectPage = () => {
             <div className="bg-red-400 h-[80vh] w-80 z-10 absolute left-1/2 transform -translate-x-1/2 -top-6 rounded-2xl p-3">
               <XCircle
                 color="red"
-                onClick={toogleSidebar}
+                onClick={toggleSidebar}
                 className="hover:cursor-pointer"
               />
               <h1>Sidebar</h1>
               <div className="flex flex-col items-start gap-5 bg-green-400 w-full p-2">
                 {addedPairs.map((item, index) => {
-                  const selectedTags = addedPairs.map((pair) => pair.tag);
-                  const availableTags = tags.filter((t) => !selectedTags.includes(t.tag));
-                  console.log("============Available Tags=============");
-                
-                  console.log(availableTags);
-
-                  console.log("============Selected Tags=============");
-                
-                  console.log(JSON.stringify(selectedTags));
-                  
                   return (
-                    <div
-                      key={item.id} // Using item.id as the key for uniqueness
-                      value={selectedTags[0]}
-                      className="flex flex-row items-start justify-center gap-3 w-full"
-                    >
+                    <div key={item.id} className="flex flex-row items-start justify-center gap-3 w-full">
                       <select
                         className="w-full"
-                        onChange={(e) => handleSelectTag(item.id, e.target.value)} // Update only the selected pair's tag
+                        value={JSON.stringify(item.tag)} 
+                        aria-label={item.tag}
+                        onChange={(e) => handleSelectTag(index, e.target.value, 'tag')} 
                       >
-                        {availableTags.map((t, i) => (
-                          <option key={i} value={t.tag}>
-                            {t.tag}
-                          </option>
-                        ))}
+                        <option value="" disabled>Select a tag</option>
+                        {tags.map((t, i) => {
+                          return (
+                            <option key={t.id} value={JSON.stringify({
+                              id:t.id,
+                              tagName: t.tag
+                            })}>
+                              {t.tag}
+                            </option>
+                          )
+                        })}
                       </select>
-                      <select className="w-full">
+                      <select 
+                        className="w-full"
+                      >
                         {item.values.map((val, vindex) => (
                           <option key={vindex}>{val}</option>
                         ))}
